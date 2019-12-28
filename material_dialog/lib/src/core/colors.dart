@@ -1,0 +1,377 @@
+import 'dart:collection';
+import 'dart:ui';
+
+import 'package:flutter/material.dart';
+
+class MaterialColors {
+  static final Map<Color, List<Color>> materialColorMapping =
+      LinkedHashMap<Color, List<Color>>.from({
+    Colors.red[500]: redList,
+    Colors.pink[500]: pinkList,
+    Colors.purple[500]: purpleList,
+    Colors.deepPurple[500]: deepPurpleList,
+    Colors.indigo[500]: indigoList,
+    Colors.blue[500]: blueList,
+    Colors.lightBlue[500]: lightBlueList,
+    Colors.cyan[500]: cyanList,
+    Colors.teal[500]: tealList,
+    Colors.green[500]: greenList,
+    Colors.lightGreen[500]: lightGreenList,
+    Colors.lime[500]: limeList,
+    Colors.yellow[500]: yellowList,
+    Colors.amber[500]: amberList,
+    Colors.orange[500]: orangeList,
+    Colors.deepOrange[500]: deepOrangeList,
+    Colors.brown[500]: brownList,
+    Colors.grey[500]: greyList,
+    Colors.blueGrey[500]: blueGreyList,
+    Colors.black: [],
+    Colors.white: [],
+  });
+
+  static final List<Color> colors = [
+    Colors.red[500],
+    Colors.pink[500],
+    Colors.purple[500],
+    Colors.deepPurple[500],
+    Colors.indigo[500],
+    Colors.blue[500],
+    Colors.lightBlue[500],
+    Colors.cyan[500],
+    Colors.teal[500],
+    Colors.green[500],
+    Colors.lightGreen[500],
+    Colors.lime[500],
+    Colors.yellow[500],
+    Colors.amber[500],
+    Colors.orange[500],
+    Colors.deepOrange[500],
+    Colors.brown[500],
+    Colors.grey[500],
+    Colors.blueGrey[500],
+    Colors.black,
+    Colors.white,
+  ];
+  static final List<List<Color>> subColors = [
+    redList,
+    pinkList,
+    purpleList,
+    deepPurpleList,
+    indigoList,
+    blueList,
+    lightBlueList,
+    cyanList,
+    tealList,
+    greenList,
+    lightGreenList,
+    limeList,
+    yellowList,
+    amberList,
+    orangeList,
+    deepOrangeList,
+    brownList,
+    greyList,
+    blueGreyList,
+    [],
+    [],
+  ];
+
+  static final List<Color> redList = [
+    Colors.red[50],
+    Colors.red[100],
+    Colors.red[200],
+    Colors.red[300],
+    Colors.red[400],
+    Colors.red[500],
+    Colors.red[600],
+    Colors.red[700],
+    Colors.red[800],
+    Colors.red[900],
+    Color(0xFFFF8A80),
+    Color(0xFFFF5252),
+    Color(0xFFFF1744),
+    Color(0xFFD50000),
+  ];
+
+  static final List<Color> pinkList = [
+    Colors.pink[50],
+    Colors.pink[100],
+    Colors.pink[200],
+    Colors.pink[300],
+    Colors.pink[400],
+    Colors.pink[500],
+    Colors.pink[600],
+    Colors.pink[700],
+    Colors.pink[800],
+    Colors.pink[900],
+    Color(0xFFFF80AB),
+    Color(0xFFFF4081),
+    Color(0xFFF50057),
+    Color(0xFFC51162)
+  ];
+
+  static final List<Color> purpleList = [
+    Colors.purple[50],
+    Colors.purple[100],
+    Colors.purple[200],
+    Colors.purple[300],
+    Colors.purple[400],
+    Colors.purple[500],
+    Colors.purple[600],
+    Colors.purple[700],
+    Colors.purple[800],
+    Colors.purple[900],
+    Color(0xFFEA80FC),
+    Color(0xFFE040FB),
+    Color(0xFFD500F9),
+    Color(0xFFAA00FF)
+  ];
+
+  static final List<Color> deepPurpleList = [
+    Colors.deepPurple[50],
+    Colors.deepPurple[100],
+    Colors.deepPurple[200],
+    Colors.deepPurple[300],
+    Colors.deepPurple[400],
+    Colors.deepPurple[500],
+    Colors.deepPurple[600],
+    Colors.deepPurple[700],
+    Colors.deepPurple[800],
+    Colors.deepPurple[900],
+    Color(0xFFB388FF),
+    Color(0xFF7C4DFF),
+    Color(0xFF651FFF),
+    Color(0xFF6200EA)
+  ];
+  static final List<Color> indigoList = [
+    Colors.indigo[50],
+    Colors.indigo[100],
+    Colors.indigo[200],
+    Colors.indigo[300],
+    Colors.indigo[400],
+    Colors.indigo[500],
+    Colors.indigo[600],
+    Colors.indigo[700],
+    Colors.indigo[800],
+    Colors.indigo[900],
+    Color(0xFF8C9EFF),
+    Color(0xFF536DFE),
+    Color(0xFF3D5AFE),
+    Color(0xFF304FFE)
+  ];
+
+  static final List<Color> blueList = [
+    Colors.blue[50],
+    Colors.blue[100],
+    Colors.blue[200],
+    Colors.blue[300],
+    Colors.blue[400],
+    Colors.blue[500],
+    Colors.blue[600],
+    Colors.blue[700],
+    Colors.blue[800],
+    Colors.blue[900],
+    Color(0xFF82B1FF),
+    Color(0xFF448AFF),
+    Color(0xFF2979FF),
+    Color(0xFF2962FF)
+  ];
+
+  static final List<Color> lightBlueList = [
+    Colors.lightBlue[50],
+    Colors.lightBlue[100],
+    Colors.lightBlue[200],
+    Colors.lightBlue[300],
+    Colors.lightBlue[400],
+    Colors.lightBlue[500],
+    Colors.lightBlue[600],
+    Colors.lightBlue[700],
+    Colors.lightBlue[800],
+    Colors.lightBlue[900],
+    Color(0xFF80D8FF),
+    Color(0xFF40C4FF),
+    Color(0xFF00B0FF),
+    Color(0xFF0091EA)
+  ];
+  static final List<Color> cyanList = [
+    Colors.cyan[50],
+    Colors.cyan[100],
+    Colors.cyan[200],
+    Colors.cyan[300],
+    Colors.cyan[400],
+    Colors.cyan[500],
+    Colors.cyan[600],
+    Colors.cyan[700],
+    Colors.cyan[800],
+    Colors.cyan[900],
+    Color(0xFF84FFFF),
+    Color(0xFF18FFFF),
+    Color(0xFF00E5FF),
+    Color(0xFF00B8D4)
+  ];
+  static final List<Color> tealList = [
+    Colors.teal[50],
+    Colors.teal[100],
+    Colors.teal[200],
+    Colors.teal[300],
+    Colors.teal[400],
+    Colors.teal[500],
+    Colors.teal[600],
+    Colors.teal[700],
+    Colors.teal[800],
+    Colors.teal[900],
+    Color(0xFFA7FFEB),
+    Color(0xFF64FFDA),
+    Color(0xFF1DE9B6),
+    Color(0xFF00BFA5)
+  ];
+  static final List<Color> greenList = [
+    Colors.green[50],
+    Colors.green[100],
+    Colors.green[200],
+    Colors.green[300],
+    Colors.green[400],
+    Colors.green[500],
+    Colors.green[600],
+    Colors.green[700],
+    Colors.green[800],
+    Colors.green[900],
+    Color(0xFFB9F6CA),
+    Color(0xFF69F0AE),
+    Color(0xFF00E676),
+    Color(0xFF00C853)
+  ];
+  static final List<Color> lightGreenList = [
+    Colors.lightGreen[50],
+    Colors.lightGreen[100],
+    Colors.lightGreen[200],
+    Colors.lightGreen[300],
+    Colors.lightGreen[400],
+    Colors.lightGreen[500],
+    Colors.lightGreen[600],
+    Colors.lightGreen[700],
+    Colors.lightGreen[800],
+    Colors.lightGreen[900],
+    Color(0xFFCCFF90),
+    Color(0xFFB2FF59),
+    Color(0xFF76FF03),
+    Color(0xFF64DD17)
+  ];
+  static final List<Color> limeList = [
+    Colors.lime[50],
+    Colors.lime[100],
+    Colors.lime[200],
+    Colors.lime[300],
+    Colors.lime[400],
+    Colors.lime[500],
+    Colors.lime[600],
+    Colors.lime[700],
+    Colors.lime[800],
+    Colors.lime[900],
+    Color(0xFFF4FF81),
+    Color(0xFFEEFF41),
+    Color(0xFFC6FF00),
+    Color(0xFFAEEA00)
+  ];
+  static final List<Color> yellowList = [
+    Colors.yellow[50],
+    Colors.yellow[100],
+    Colors.yellow[200],
+    Colors.yellow[300],
+    Colors.yellow[400],
+    Colors.yellow[500],
+    Colors.yellow[600],
+    Colors.yellow[700],
+    Colors.yellow[800],
+    Colors.yellow[900],
+    Color(0xFFFFFF8D),
+    Color(0xFFFFFF00),
+    Color(0xFFFFEA00),
+    Color(0xFFFFD600),
+  ];
+  static final List<Color> amberList = [
+    Colors.amber[50],
+    Colors.amber[100],
+    Colors.amber[200],
+    Colors.amber[300],
+    Colors.amber[400],
+    Colors.amber[500],
+    Colors.amber[600],
+    Colors.amber[700],
+    Colors.amber[800],
+    Colors.amber[900],
+    Color(0xFFFFE57F),
+    Color(0xFFFFD740),
+    Color(0xFFFFC400),
+    Color(0xFFFFAB00),
+  ];
+  static final List<Color> orangeList = [
+    Colors.orange[50],
+    Colors.orange[100],
+    Colors.orange[200],
+    Colors.orange[300],
+    Colors.orange[400],
+    Colors.orange[500],
+    Colors.orange[600],
+    Colors.orange[700],
+    Colors.orange[800],
+    Colors.orange[900],
+    Color(0xFFFFD180),
+    Color(0xFFFFAB40),
+    Color(0xFFFF9100),
+    Color(0xFFFF6D00),
+  ];
+  static final List<Color> deepOrangeList = [
+    Colors.deepOrange[50],
+    Colors.deepOrange[100],
+    Colors.deepOrange[200],
+    Colors.deepOrange[300],
+    Colors.deepOrange[400],
+    Colors.deepOrange[500],
+    Colors.deepOrange[600],
+    Colors.deepOrange[700],
+    Colors.deepOrange[800],
+    Colors.deepOrange[900],
+    Color(0xFFFF9E80),
+    Color(0xFFFF4E40),
+    Color(0xFFFF3D00),
+    Color(0xFFFF2C00),
+  ];
+
+  static final List<Color> brownList = [
+    Colors.brown[50],
+    Colors.brown[100],
+    Colors.brown[200],
+    Colors.brown[300],
+    Colors.brown[400],
+    Colors.brown[500],
+    Colors.brown[600],
+    Colors.brown[700],
+    Colors.brown[800],
+    Colors.brown[900]
+  ];
+  static final List<Color> greyList = [
+    Colors.grey[50],
+    Colors.grey[100],
+    Colors.grey[200],
+    Colors.grey[300],
+    Colors.grey[400],
+    Colors.grey[500],
+    Colors.grey[600],
+    Colors.grey[700],
+    Colors.grey[800],
+    Colors.grey[900]
+  ];
+  static final List<Color> blueGreyList = [
+    Colors.blueGrey[50],
+    Colors.blueGrey[100],
+    Colors.blueGrey[200],
+    Colors.blueGrey[300],
+    Colors.blueGrey[400],
+    Colors.blueGrey[500],
+    Colors.blueGrey[600],
+    Colors.blueGrey[700],
+    Colors.blueGrey[800],
+    Colors.blueGrey[900]
+  ];
+}
