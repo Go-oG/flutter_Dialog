@@ -1,75 +1,132 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
-import 'package:material_dialog/shelf.dart';
+import 'package:material_dialog/share.dart';
+import 'package:material_dialog/src/colors.dart';
+
+class _CustomFormatter extends TextInputFormatter {
+  @override
+  TextEditingValue formatEditUpdate(TextEditingValue oldValue,
+      TextEditingValue newValue) {
+    return newValue.copyWith(
+        text: newValue.text.toUpperCase(),
+        selection: newValue.selection,
+        composing: TextRange.empty);
+  }
+}
 
 class ColorDialog extends BaseDialog {
-  List<Color> colors;
-  List<List<Color>> subColors;
-  final Color initialSelection;
-  final bool allowCustomArgb;
-  final bool showAlphaSelector;
+  //列数
   final int columnCount;
 
-  ColorDialog(
-      {this.columnCount = 4,
-      this.initialSelection,
-      this.allowCustomArgb = false,
-      this.showAlphaSelector = false,
-      List<Color> colors,
-      List<List<Color>> subColors,
-      Text title,
-      Widget titleIcon,
-      Text checkBoxPrompt,
-      bool promptInitValue = false,
-      String positive,
-      String negative,
-      bool reverseActionButton,
-      Color positiveColor,
-      Color negativeColor,
-      Color backgroundColor,
-      Color maskColor,
-      RouteTransitionsBuilder transitionBuilder,
-      Duration transitionDuration,
-      double cornerRadius,
-      bool autoCancel = true,
-      bool breakCancel = true,
-      bool outCanCancel = true,
-      ActionListener actionListener,
-      ValueChanged<bool> checkBoxPromptCallback})
+  //每个颜色块之间的间隔(该参数会影响视图的布局)
+  final double childItemMargin;
+
+  //外层圆环的宽度
+  final double outCircleWidth;
+
+  //传入初始化时传入的颜色(后续完善)
+  final Color initialSelection;
+
+  //是否允许显示自定义颜色，如果该选项为true 则会忽略传入的颜色否则只会显示传入的颜色
+  final bool allowCustomArgb;
+
+  //是否显示透明通道的选择器
+  final bool showAlphaSelector;
+
+  List<Color> colors;
+  List<List<Color>> childColors;
+
+  ColorDialog({this.initialSelection,
+    this.columnCount = 4,
+    this.childItemMargin = 16,
+    this.allowCustomArgb = false,
+    this.showAlphaSelector = false,
+    this.outCircleWidth = 1.5,
+    List<Color> colors,
+    List<List<Color>> childColors,
+    Text title,
+    Widget titleIcon,
+    Text checkBoxPrompt,
+    bool promptInitValue = false,
+    String positive,
+    String negative,
+    Gravity gravity,
+    bool reverseActionButton,
+    Color positiveColor,
+    Color negativeColor,
+    Color backgroundColor,
+    Color maskColor,
+    RouteTransitionsBuilder animation,
+    Duration transitionDuration,
+    BorderRadiusGeometry cornerRadius,
+    bool autoCancel = true,
+    bool breakCancel = true,
+    bool outCanCancel = true,
+    ActionListener actionListener,
+    ValueChanged<bool> checkBoxPromptCallback})
       : super(
-            title: title,
-            titleIcon: titleIcon,
-            checkBoxPrompt: checkBoxPrompt,
-            positive: positive,
-            negative: negative,
-            reverseActionButton: reverseActionButton,
-            transitionBuilder: transitionBuilder,
-            actionListener: actionListener,
-            checkBoxPromptCallback: checkBoxPromptCallback,
-            cornerRadius: cornerRadius,
-            promptInitValue: promptInitValue,
-            positiveColor: positiveColor,
-            negativeColor: negativeColor,
-            backgroundColor: backgroundColor,
-            maskColor: maskColor,
-            transitionDuration: transitionDuration,
-            autoCancel: autoCancel,
-            breakCancel: breakCancel,
-            outCanCancel: outCanCancel) {
+      title: title,
+      titleIcon: titleIcon,
+      checkBoxPrompt: checkBoxPrompt,
+      positive: positive,
+      negative: negative,
+      gravity: gravity,
+      reverseActionButton: reverseActionButton,
+      animation: animation,
+      actionListener: actionListener,
+      checkBoxPromptCallback: checkBoxPromptCallback,
+      cornerRadius: cornerRadius,
+      promptInitValue: promptInitValue,
+      positiveColor: positiveColor,
+      negativeColor: negativeColor,
+      backgroundColor: backgroundColor,
+      maskColor: maskColor,
+      transitionDuration: transitionDuration,
+      autoCancel: autoCancel,
+      breakCancel: breakCancel,
+      outCanCancel: outCanCancel) {
+    if (this.columnCount == null || this.columnCount <= 0) {
+      throw ArgumentError("参数 columnCount must not null And must > 0");
+    }
+
+    if (this.childItemMargin == null || this.childItemMargin < 0) {
+      throw ArgumentError("参数 childItemMargin must not null And must >= 0");
+    }
+
     if (colors == null || colors.isEmpty) {
       this.colors = MaterialColors.colors;
-      this.subColors = MaterialColors.subColors;
+      this.childColors = MaterialColors.subColors;
     } else {
       this.colors = colors;
-      if (subColors != null &&
-          subColors.isNotEmpty &&
-          subColors.length != colors.length) {
+      if (childColors != null &&
+          childColors.isNotEmpty &&
+          childColors.length != colors.length) {
         throw ArgumentError(
             "当 [colors]不为空且[subColors]也不为空时,[colors.length]必须等于[subColors.length]");
       }
-      this.subColors = subColors;
+      this.childColors = childColors;
+    }
+
+    if (initialSelection != null) {
+      for (int i = 0; i < this.colors.length; i++) {
+        if (this.colors[i] == initialSelection) {
+          mainSelectIndex = i;
+          break;
+        }
+      }
     }
   }
+
+  //当前自定义的颜色(该颜色只有当当前界面是自定义颜色界面是才会有用)
+  Color customArgbColor = Colors.black;
+
+  //自定义颜色的输入栏文本控制其
+  TextEditingController _controller;
+  ScrollController _scrollController;
+
+//焦点控制
+  FocusNode _textFieldNode;
 
   //当前选中的主要颜色的序列
   int mainSelectIndex = -1;
@@ -78,16 +135,16 @@ class ColorDialog extends BaseDialog {
   int subSelectIndex = -1;
 
   ///[allowCustomArgb]==true时 用于记录ViewPage当前的界面索引
-  int viewPageIndex = -1;
-
-  //当前自定义的颜色(该颜色只有当当前界面是自定义颜色界面是才会有用)
-  Color customArgbColor = Colors.black;
-
-  //自定义颜色的输入栏
-  TextEditingController _controller;
+  int pageIndex = -1;
 
   //当前显示的界面 只有当其有subColor时才会有用 只能在0和1之间
-  int showStackIndex = 0;
+  int _showStackIndex = 0;
+
+  //图标的大小
+  double _iconSize;
+
+  //记录最大宽度
+  double _maxWidth = 0;
 
   @override
   void initState() {
@@ -98,6 +155,23 @@ class ColorDialog extends BaseDialog {
     if (_controller == null) {
       _controller = TextEditingController(text: _formatColorToString());
     }
+    if (_scrollController == null) {
+      _scrollController = ScrollController();
+      _scrollController.addListener(() {
+        if (_maxWidth <= 0) {
+          pageIndex = 0;
+        } else {
+          if (_scrollController.offset >= _maxWidth * 0.9) {
+            pageIndex = 1;
+          } else {
+            pageIndex = 0;
+          }
+        }
+      });
+    }
+    if (_textFieldNode == null) {
+      _textFieldNode = FocusNode();
+    }
   }
 
   @override
@@ -106,6 +180,12 @@ class ColorDialog extends BaseDialog {
     if (_controller != null) {
       _controller.dispose();
     }
+    if (_scrollController != null) {
+      _scrollController.dispose();
+    }
+    if (_textFieldNode != null) {
+      _textFieldNode.dispose();
+    }
   }
 
   ///返回被选中的颜色,选取规则如下:
@@ -113,7 +193,7 @@ class ColorDialog extends BaseDialog {
   ///否则其它情况下会返回主界面选择的颜色
   @override
   dynamic operationResult(bool isPositiveButton) {
-    if (allowCustomArgb && viewPageIndex == 1) {
+    if (allowCustomArgb && pageIndex == 1) {
       if (showAlphaSelector) {
         return Color.fromARGB(customArgbColor.alpha, customArgbColor.red,
             customArgbColor.green, customArgbColor.blue);
@@ -122,6 +202,7 @@ class ColorDialog extends BaseDialog {
             customArgbColor.blue);
       }
     }
+
     if (colors == null ||
         colors.isEmpty ||
         mainSelectIndex < 0 ||
@@ -129,13 +210,13 @@ class ColorDialog extends BaseDialog {
       return null;
     }
     Color color = colors[mainSelectIndex];
-    if (subColors == null ||
-        subColors.isEmpty ||
+    if (childColors == null ||
+        childColors.isEmpty ||
         mainSelectIndex < 0 ||
-        mainSelectIndex >= subColors.length) {
+        mainSelectIndex >= childColors.length) {
       return color;
     }
-    List<Color> subList = subColors[mainSelectIndex];
+    List<Color> subList = childColors[mainSelectIndex];
     if (subList == null ||
         subList.isEmpty ||
         subList.length <= subSelectIndex ||
@@ -147,124 +228,99 @@ class ColorDialog extends BaseDialog {
 
   @override
   Widget buildContentWidget(BuildContext context) {
-    if (!allowCustomArgb) {
-      viewPageIndex = -1;
-      return Padding(
-          padding: EdgeInsets.only(top: 24, left: 8, right: 8),
-          child: _buildMainPage());
+    if (allowCustomArgb == null || !allowCustomArgb) {
+      return _buildMainPage();
     }
-
-    return PageView(
-      onPageChanged: (val) {
-        viewPageIndex = val;
-      },
-      children: <Widget>[_buildMainPage(), _buildArgbPage()],
+    _maxWidth = obtainContentMaxWidth(context);
+    _iconSize = ((_maxWidth - (columnCount - 1) * childItemMargin) /
+        (columnCount * 1.0)) *
+        0.8;
+    return SingleChildScrollView(
+      scrollDirection: Axis.horizontal,
+      physics: PageScrollPhysics(),
+      controller: _scrollController,
+      child: Wrap(
+        alignment: WrapAlignment.start,
+        children: <Widget>[
+          SizedBox(
+            width: _maxWidth,
+            child: _buildMainPage(),
+          ),
+          Padding(
+            padding: EdgeInsets.only(left: 1),
+            child: SizedBox(
+              width: _maxWidth,
+              child: _buildArgbPage(),
+            ),
+          ),
+        ],
+      ),
     );
   }
 
   //构建完整的页面
   Widget _buildMainPage() {
-    if (!_hasChildColor(mainSelectIndex)) {
-      return _buildNormalPage(colors, columnCount);
+    if (!_hasChildColors(mainSelectIndex)) {
+      return _buildNormalPage(colors);
     }
     return IndexedStack(
-      index: showStackIndex,
+      index: _showStackIndex,
       children: <Widget>[
-        _buildNormalPage(colors, columnCount),
-        _buildSubPage(subColors[mainSelectIndex], columnCount)
+        _buildNormalPage(colors),
+        _buildSubPage(childColors[mainSelectIndex])
       ],
     );
   }
 
   //主颜色的主界面
-  Widget _buildNormalPage(List<Color> colorList, int columnCount) {
+  Widget _buildNormalPage(List<Color> colorList) {
     if (colorList == null) {
       colorList = [];
-    }
-    if (columnCount <= 0) {
-      columnCount = 4;
     }
     return GridView.builder(
         itemCount: colorList.length,
         shrinkWrap: true,
         gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
             crossAxisCount: columnCount,
-            mainAxisSpacing: 16,
-            crossAxisSpacing: 16,
+            mainAxisSpacing: childItemMargin,
+            crossAxisSpacing: childItemMargin,
             childAspectRatio: 1),
         itemBuilder: (ctx, index) {
           Color curColor = colorList[index];
-          Color borderColor;
-          if (curColor == Colors.black) {
-            borderColor = Colors.grey;
-          } else if (curColor == Colors.white) {
-            borderColor = Colors.grey;
-          } else {
-            borderColor = Colors.black54;
+          Icon icon;
+          if (index == mainSelectIndex) {
+            icon = Icon(Icons.done,
+                color: curColor == Colors.white ? Colors.black : Colors.white,
+                size: _iconSize);
           }
-
-          return InkWell(
-            onTap: () {
-              _selectMainColor(index);
-            },
-            child: Container(
-              decoration: BoxDecoration(
-                border: Border.all(color: borderColor, width: 1.50),
-                color: curColor,
-                shape: BoxShape.circle,
-              ),
-              child: (index == mainSelectIndex)
-                  ? Center(
-                      child: Icon(
-                        Icons.done,
-                        color: curColor == Colors.white
-                            ? Colors.black
-                            : Colors.white,
-                        size: 48,
-                      ),
-                    )
-                  : null,
-            ),
-          );
+          return CustomColorWidget(() {
+            _selectMainColor(index);
+          }, Colors.black54, outCircleWidth, curColor, icon);
         });
   }
 
   //次要颜色的界面
-  Widget _buildSubPage(List<Color> colorList, int columnCount) {
+  Widget _buildSubPage(List<Color> colorList) {
     if (colorList == null) {
       colorList = [];
     }
-    if (columnCount <= 0) {
-      columnCount = 4;
-    }
-    //   subSelectIndex = _findColorIndexInSubColor();
     return GridView.builder(
         shrinkWrap: true,
         itemCount: colorList.length + 1,
         gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
             crossAxisCount: columnCount,
-            mainAxisSpacing: 16,
-            crossAxisSpacing: 16,
+            mainAxisSpacing: childItemMargin,
+            crossAxisSpacing: childItemMargin,
             childAspectRatio: 1),
         itemBuilder: (ctx, index) {
           if (index == 0) {
-            return InkWell(
-              onTap: () {
-                subSelectIndex = -1;
-                showStackIndex = 0;
-                setState();
-              },
-              child: Container(
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  shape: BoxShape.circle,
-                ),
-                child: Center(
-                  child:
-                      Icon(Icons.arrow_back, color: Colors.black54, size: 40),
-                ),
-              ),
-            );
+            Icon icon =
+            Icon(Icons.arrow_back, color: Colors.black54, size: _iconSize);
+            return CustomColorWidget(() {
+              subSelectIndex = -1;
+              _showStackIndex = 0;
+              setState();
+            }, Colors.white, 0, Colors.white, icon);
           }
 
           Color curColor = colorList[index - 1];
@@ -274,29 +330,19 @@ class ColorDialog extends BaseDialog {
           } else {
             borderColor = Colors.black;
           }
-          return InkWell(
-            onTap: () {
-              subSelectIndex = index - 1;
-              setState();
-            },
-            child: Container(
-              decoration: BoxDecoration(
-                border: Border.all(color: borderColor, width: 1.5),
-                color: curColor,
-                shape: BoxShape.circle,
-              ),
-              child: ((index - 1) == subSelectIndex)
-                  ? Center(
-                      child: Icon(
-                      Icons.done,
-                      color: curColor == Colors.white
-                          ? Colors.black
-                          : Colors.white,
-                      size: 48,
-                    ))
-                  : null,
-            ),
-          );
+
+          bool showIcon = (index - 1) == subSelectIndex;
+          Icon icon;
+          if (showIcon) {
+            icon = Icon(Icons.done,
+                color: curColor == Colors.white ? Colors.black : Colors.white,
+                size: _iconSize);
+          }
+
+          return CustomColorWidget(() {
+            subSelectIndex = index - 1;
+            setState();
+          }, borderColor, outCircleWidth, curColor, icon);
         });
   }
 
@@ -340,6 +386,7 @@ class ColorDialog extends BaseDialog {
                   controller: _controller,
                   textCapitalization: TextCapitalization.characters,
                   maxLines: 1,
+                  focusNode: _textFieldNode,
                   inputFormatters: [
                     LengthLimitingTextInputFormatter(showAlphaSelector ? 8 : 6),
                     WhitelistingTextInputFormatter(RegExp("[0-9A-Fa-f]")),
@@ -354,7 +401,7 @@ class ColorDialog extends BaseDialog {
                       contentPadding: EdgeInsets.only(bottom: 8),
                       hintText: "十六进制颜色值",
                       hintStyle:
-                          TextStyle(fontSize: 13, color: Colors.grey[300]),
+                      TextStyle(fontSize: 13, color: Colors.grey[300]),
                       border: inputBorder,
                       enabledBorder: inputBorder,
                       errorBorder: inputBorder,
@@ -385,6 +432,7 @@ class ColorDialog extends BaseDialog {
                       int progress = value.floor();
                       customArgbColor = customArgbColor.withAlpha(progress);
                       _controller.text = _formatColorToString();
+                      _dismissFocus();
                       setState();
                     }),
                   ),
@@ -401,6 +449,7 @@ class ColorDialog extends BaseDialog {
                     int progress = value.floor();
                     customArgbColor = customArgbColor.withRed(progress);
                     _controller.text = _formatColorToString();
+                    _dismissFocus();
                     setState();
                   }),
                 ),
@@ -416,6 +465,7 @@ class ColorDialog extends BaseDialog {
                     int progress = value.floor();
                     customArgbColor = customArgbColor.withGreen(progress);
                     _controller.text = _formatColorToString();
+                    _dismissFocus();
                     setState();
                   }),
                 ),
@@ -431,6 +481,7 @@ class ColorDialog extends BaseDialog {
                     int progress = value.floor();
                     customArgbColor = customArgbColor.withBlue(progress);
                     _controller.text = _formatColorToString();
+                    _dismissFocus();
                     setState();
                   }),
                 ),
@@ -442,18 +493,28 @@ class ColorDialog extends BaseDialog {
     );
   }
 
+  void _dismissFocus() {
+    //先关闭软键盘
+//    FocusScope.of(context).requestFocus(FocusNode());
+    _textFieldNode.unfocus();
+  }
+
+ 
   //处理当文本改变时，应该显示的颜色是什么
   void _handleColorWhenTextChange(String s) {
     if (s == null || s.isEmpty) {
+      customArgbColor = Color(0xff000000);
+      setState();
       return;
     }
+
     if (s.length <= 2) {
       if (showAlphaSelector) {
         int alpha = int.tryParse("$s", radix: 16);
         customArgbColor = customArgbColor.withAlpha(alpha);
       } else {
         int red = int.tryParse("$s", radix: 16);
-        customArgbColor=customArgbColor.withAlpha(255);
+        customArgbColor = customArgbColor.withAlpha(255);
         customArgbColor = customArgbColor.withRed(red);
       }
     }
@@ -467,18 +528,21 @@ class ColorDialog extends BaseDialog {
         customArgbColor = customArgbColor.withGreen(green);
       }
     }
+
     if (s.length > 4 && s.length <= 6) {
-      if(showAlphaSelector){
+      if (showAlphaSelector) {
         int green = int.tryParse("${s.substring(4)}", radix: 16);
         customArgbColor = customArgbColor.withGreen(green);
-      }else{
+      } else {
         int blue = int.tryParse("${s.substring(4)}", radix: 16);
         customArgbColor = customArgbColor.withBlue(blue);
       }
     }
+
     if (s.length > 6 && s.length <= 8) {
       customArgbColor = Color(int.tryParse("$s", radix: 16));
     }
+
     setState();
   }
 
@@ -526,39 +590,40 @@ class ColorDialog extends BaseDialog {
   //更新主界面的颜色选择
   void _selectMainColor(int selectIndex) {
     mainSelectIndex = selectIndex;
-    if (_hasChildColor(mainSelectIndex)) {
-      showStackIndex = 1;
-      subSelectIndex = _findColorIndexInSubColor();
+    if (_hasChildColors(mainSelectIndex)) {
+      _showStackIndex = 1;
+      subSelectIndex = _findColorIndexInChildColor();
     } else {
-      showStackIndex = 0;
+      _showStackIndex = 0;
       subSelectIndex = -1;
     }
     setState();
   }
 
-  bool _hasChildColor(int mainIndex) {
+  //判断该索引对应的Item 有无 子Item
+  bool _hasChildColors(int mainIndex) {
     if (mainIndex < 0) {
       return false;
     }
-    if (subColors == null || subColors.isEmpty) {
+    if (childColors == null || childColors.isEmpty) {
       return false;
     }
 
     if (colors == null ||
         colors.isEmpty ||
         colors.length <= mainIndex ||
-        subColors.length <= mainIndex) {
+        childColors.length <= mainIndex) {
       return false;
     }
-    List<Color> sl = subColors[mainIndex];
+    List<Color> sl = childColors[mainIndex];
     return sl != null && sl.isNotEmpty;
   }
 
   //找到当前颜色在SubColor中的位置如果没有 则返回0
-  int _findColorIndexInSubColor() {
+  int _findColorIndexInChildColor() {
     int index = 0;
     Color curColor = colors[mainSelectIndex];
-    List<Color> subList = subColors[mainSelectIndex];
+    List<Color> subList = childColors[mainSelectIndex];
     for (int i = 0; i < subList.length; i++) {
       if (subList[i] == curColor) {
         index = i;
@@ -577,13 +642,28 @@ class ColorDialog extends BaseDialog {
   }
 }
 
-class _CustomFormatter extends TextInputFormatter {
+class CustomColorWidget extends StatelessWidget {
+  final VoidCallback onPress;
+  final Color borderColor;
+  final double outCircleWidth;
+  final Color color;
+  final Icon icon;
+
+  CustomColorWidget(this.onPress, this.borderColor, this.outCircleWidth,
+      this.color, this.icon);
+
   @override
-  TextEditingValue formatEditUpdate(
-      TextEditingValue oldValue, TextEditingValue newValue) {
-    return newValue.copyWith(
-        text: newValue.text.toUpperCase(),
-        selection: newValue.selection,
-        composing: TextRange.empty);
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: onPress,
+      child: Container(
+        decoration: BoxDecoration(
+          border: Border.all(color: borderColor, width: outCircleWidth),
+          color: color,
+          shape: BoxShape.circle,
+        ),
+        child: icon == null ? null : Center(child: icon),
+      ),
+    );
   }
 }

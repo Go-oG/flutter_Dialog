@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:material_dialog/shelf.dart';
+import 'package:material_dialog/share.dart';
+
 class SimpleDialog extends BaseDialog {
   final String content;
   TextStyle contentStyle;
@@ -19,9 +20,9 @@ class SimpleDialog extends BaseDialog {
       Color negativeColor,
       Color backgroundColor,
       Color maskColor,
-      RouteTransitionsBuilder transitionBuilder,
+      RouteTransitionsBuilder animation,
       Duration transitionDuration,
-      double radius,
+      BorderRadiusGeometry cornerRadius,
       bool autoCancel = true,
       bool breakCancel = true,
       bool outCanCancel = true,
@@ -34,10 +35,10 @@ class SimpleDialog extends BaseDialog {
             positive: positive,
             negative: negative,
             reverseActionButton: reverseActionButton,
-            transitionBuilder: transitionBuilder,
+            animation: animation,
             actionListener: actionListener,
             checkBoxPromptCallback: checkBoxPromptCallback,
-            cornerRadius: radius,
+            cornerRadius: cornerRadius,
             promptInitValue: promptInitValue,
             positiveColor: positiveColor,
             negativeColor: negativeColor,

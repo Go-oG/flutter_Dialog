@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:material_dialog/shelf.dart';
+import 'package:material_dialog/share.dart';
 
 class InputDialog extends BaseDialog {
   final InputBorder border =
@@ -39,8 +39,8 @@ class InputDialog extends BaseDialog {
       Color negativeColor,
       Color backgroundColor,
       Color maskColor,
-      double radius,
-      RouteTransitionsBuilder transitionBuilder,
+      BorderRadiusGeometry cornerRadius,
+      RouteTransitionsBuilder animation,
       Duration transitionDuration,
       bool autoCancel = true,
       bool breakCancel = true,
@@ -59,9 +59,9 @@ class InputDialog extends BaseDialog {
             negativeColor: negativeColor,
             backgroundColor: backgroundColor,
             maskColor: maskColor,
-            transitionBuilder: transitionBuilder,
+            animation: animation,
             transitionDuration: transitionDuration,
-            cornerRadius: radius,
+            cornerRadius: cornerRadius,
             autoCancel: autoCancel,
             breakCancel: breakCancel,
             outCanCancel: outCanCancel,

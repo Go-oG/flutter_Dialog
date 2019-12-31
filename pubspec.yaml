@@ -10,12 +10,9 @@ dependencies:
     sdk: flutter
   material_dialog:
     path: material_dialog
-
-
-  # The following adds the Cupertino Icons font to your application.
-  # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^0.1.2
-
+  liquid_swipe: ^1.3.0
+  
 dev_dependencies:
   flutter_test:
     sdk: flutter

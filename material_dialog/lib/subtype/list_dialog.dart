@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:material_dialog/shelf.dart';
+import 'package:material_dialog/share.dart';
 
 typedef ItemBuilder = String Function(int index);
 
@@ -17,9 +17,23 @@ class ListDialog extends BaseDialog {
   final int itemCount;
   final ItemBuilder itemBuilder;
   final TextStyle itemStyle;
+  final Color activeColor;
+  final Color checkColor;
+  final Color focusColor;
+
+  //checkBox是圆形还是方形
+  final bool isRadioButton;
+
+  //是单选还是多选
+  final singleSelect;
 
   ListDialog(this.itemCount, this.itemBuilder,
       {this.itemStyle = const TextStyle(color: Colors.black45, fontSize: 17),
+      this.activeColor = Colors.grey,
+      this.checkColor = Colors.white,
+      this.focusColor = Colors.white,
+      this.isRadioButton = false,
+      this.singleSelect = false,
       Text title,
       Widget titleIcon,
       Text checkBoxPrompt,
@@ -31,9 +45,9 @@ class ListDialog extends BaseDialog {
       Color negativeColor,
       Color backgroundColor,
       Color maskColor,
-      RouteTransitionsBuilder transitionBuilder,
+      RouteTransitionsBuilder animation,
       Duration transitionDuration,
-      double radius,
+      BorderRadiusGeometry cornerRadius,
       bool autoCancel = true,
       bool breakCancel = true,
       bool outCanCancel = true,
@@ -50,9 +64,9 @@ class ListDialog extends BaseDialog {
             negativeColor: negativeColor,
             backgroundColor: backgroundColor,
             maskColor: maskColor,
-            transitionBuilder: transitionBuilder,
+            animation: animation,
             transitionDuration: transitionDuration,
-            cornerRadius: radius,
+            cornerRadius: cornerRadius,
             autoCancel: autoCancel,
             breakCancel: breakCancel,
             outCanCancel: outCanCancel,
@@ -94,32 +108,71 @@ class ListDialog extends BaseDialog {
   }
 
   Widget _buildItem(BuildContext context, int index) {
+    Widget box;
+    if (isRadioButton) {
+      box = Radio<bool>(
+          materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+          autofocus: false,
+          groupValue: true,
+          focusColor: focusColor,
+          activeColor: activeColor,
+          value: _list[index].isCheck,
+          onChanged: (val) {
+            print("回调");
+            _refreshData(val, index, false);
+          });
+    } else {
+      box = Checkbox(
+          materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+          autofocus: false,
+          focusColor: focusColor,
+          activeColor: activeColor,
+          checkColor: checkColor,
+          value: _list[index].isCheck,
+          onChanged: (val) {
+            _refreshData(val, index, true);
+          });
+    }
+
     return SizedBox(
-        height: 48,
-        child: Row(
-          mainAxisSize: MainAxisSize.min,
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: <Widget>[
-            StatefulBuilder(
-              builder: (context, stateSetter) {
-                return Checkbox(
-                    materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                    autofocus: false,
-                    value: _list[index].isCheck,
-                    onChanged: (val) {
-                      _list[index].isCheck = val;
-                      setState();
-                    });
-              },
-            ),
-            Padding(
-                padding: EdgeInsets.only(left: listItemContentMargin),
+      height: 48,
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        mainAxisAlignment: MainAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: <Widget>[
+          box,
+          //避免越界
+          Flexible(
+            child: Padding(
+              padding: EdgeInsets.only(left: listItemContentMargin),
+              child: Align(
+                alignment: Alignment.centerLeft,
                 child: Text(_list[index].itemTitle,
-                    textAlign: TextAlign.center,
-                    maxLines: 1,
-                    style: itemStyle)),
-          ],
-        ));
+                    textAlign: TextAlign.center, maxLines: 1, style: itemStyle),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  void _refreshData(bool val, int index, bool isCheckBox) {
+    if (!isCheckBox) {
+      val = !val;
+    }
+    if (singleSelect) {
+      for (int i = 0; i < _list.length; i++) {
+        if (i == index) {
+          _list[i].isCheck = val;
+        } else {
+          _list[i].isCheck = false;
+        }
+      }
+    } else {
+      _list[index].isCheck = val;
+    }
+    setState();
   }
 }

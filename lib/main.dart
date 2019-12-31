@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:material_dialog/shelf.dart';
+import 'package:material_dialog/share.dart';
 import 'package:material_dialog/subtype/simple_dialog.dart' as cs;
 
 void main() => runApp(MyApp());
@@ -68,17 +68,25 @@ class MyApp extends StatelessWidget {
         context,
         ListDialog(20, (val) {
           return "Item $val";
-        }));
+        }, singleSelect: true, isRadioButton: true));
   }
 
-  void _showColorDialog(BuildContext context) {
-    DialogUtil.show(
+  void _showColorDialog(BuildContext context) async {
+    var result = await DialogUtil.show(
         context,
         ColorDialog(
             title: Text("Color Dialog"),
             positive: "确定",
             negative: "取消",
-            showAlphaSelector: false,
+            cornerRadius: BorderRadius.only(
+                topLeft: Radius.circular(16), topRight: Radius.circular(16)),
+            showAlphaSelector: true,
+            initialSelection: Colors.blue[500],
             allowCustomArgb: true));
+    if (result == null) {
+      print("没选择任何颜色");
+    }
+    Color color = result as Color;
+    print("颜色： $color");
   }
 }

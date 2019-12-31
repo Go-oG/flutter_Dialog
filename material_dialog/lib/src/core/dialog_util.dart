@@ -1,15 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:material_dialog/src/core/core_dialog.dart';
 import 'dialog.dart';
-
-
 
 ///自定义Dialog的工具类
 class DialogUtil {
   DialogUtil._();
 
-  static void show(BuildContext context, BaseDialog dialog) {
-    showGeneralDialog(
+  static Future<dynamic> show(BuildContext context, BaseDialog dialog) {
+   return showGeneralDialog(
       context: context,
       pageBuilder: (BuildContext buildContext, Animation<double> animation,
           Animation<double> secondaryAnimation) {
@@ -24,7 +23,16 @@ class DialogUtil {
       barrierLabel: "",
       barrierColor: dialog.maskColor,
       transitionDuration: dialog.transitionDuration,
-      transitionBuilder: dialog.buildMaterialDialogTransitions,
+      transitionBuilder: (BuildContext context, Animation<double> animation,
+          Animation<double> secondaryAnimation, Widget child) {
+        if (dialog.animation == null) {
+          return BaseDialog.buildDialogTransitions(
+              context, animation, secondaryAnimation, child);
+        } else {
+          return dialog.animation(
+              context, animation, secondaryAnimation, child);
+        }
+      },
       useRootNavigator: true,
     );
   }
