@@ -193,6 +193,10 @@ class ColorDialog extends BaseDialog {
   ///否则其它情况下会返回主界面选择的颜色
   @override
   dynamic operationResult(bool isPositiveButton) {
+    if(!isPositiveButton){
+      return null;
+    }
+    
     if (allowCustomArgb && pageIndex == 1) {
       if (showAlphaSelector) {
         return Color.fromARGB(customArgbColor.alpha, customArgbColor.red,
