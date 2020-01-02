@@ -192,4 +192,9 @@ abstract class BaseDialog extends LiveCycleCallback {
   dynamic operationResult(bool isPositiveButton) {
     return null;
   }
+
+  //隐藏软键盘
+  void dismissKeyboard(){
+    FocusScope.of(context).requestFocus(FocusNode());
+  }
 }

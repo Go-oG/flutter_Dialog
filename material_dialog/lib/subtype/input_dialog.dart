@@ -1,19 +1,22 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:material_dialog/share.dart';
 
 class InputDialog extends BaseDialog {
-  final InputBorder border =
-      UnderlineInputBorder(borderSide: BorderSide(color: Colors.grey[400]));
+  InputBorder border;
   final int maxLength;
+
+  //是否显示输入字数
+  final bool showMaxLengthTip;
   final bool autoFocus;
   final String hintText;
-  final bool isPassword;
+  final TextStyle hintStyle;
+  final TextStyle contentStyle;
+  final Color borderColor;
+  final InputType inputType;
+
   final EdgeInsetsGeometry textContentPadding;
-  final TextInputAction inputAction;
-  TextStyle hintStyle;
-  TextStyle contentStyle;
-  ValueChanged<String> changedCallback;
-  InputBorder inputBorder;
+  final ValueChanged<String> onChanged;
 
   InputDialog(
       {this.contentStyle =
@@ -21,13 +24,13 @@ class InputDialog extends BaseDialog {
       this.hintText = "",
       this.hintStyle = const TextStyle(color: Color(0xFF9E9E9E), fontSize: 17),
       this.maxLength,
+      this.showMaxLengthTip = false,
       this.autoFocus = false,
-      this.isPassword = false,
       this.textContentPadding =
           const EdgeInsets.only(left: 0, right: 0, top: 8, bottom: 8),
-      this.inputAction = TextInputAction.none,
-      this.inputBorder,
-      this.changedCallback,
+      this.borderColor = const Color(0xFFBDBDBD),
+      this.inputType = InputType.TEXT,
+      this.onChanged,
       bool reverseActionButton = false,
       Text title,
       Widget titleIcon,
@@ -66,7 +69,10 @@ class InputDialog extends BaseDialog {
             breakCancel: breakCancel,
             outCanCancel: outCanCancel,
             actionListener: actionListener,
-            checkBoxPromptCallback: checkBoxPromptCallback);
+            checkBoxPromptCallback: checkBoxPromptCallback) {
+    this.border =
+        UnderlineInputBorder(borderSide: BorderSide(color: borderColor));
+  }
 
   TextEditingController _controller;
 
@@ -96,34 +102,90 @@ class InputDialog extends BaseDialog {
 
   @override
   Widget buildContentWidget(BuildContext context) {
-    if (inputBorder == null) {
-      inputBorder = border;
-    }
-    TextField field = TextField(
-      controller: _controller,
-      style: contentStyle,
-      maxLines: null,
-      maxLength: maxLength,
-      autofocus: autoFocus,
-      textAlign: TextAlign.start,
-      textDirection: TextDirection.ltr,
-      textAlignVertical: TextAlignVertical.center,
-      onChanged: changedCallback,
-      keyboardType: TextInputType.multiline,
-      obscureText: isPassword,
-      textInputAction: inputAction,
-      decoration: InputDecoration(
-          contentPadding: textContentPadding,
-          hintText: hintText,
-          hintStyle: hintStyle,
-          border: border,
-          disabledBorder: border,
-          focusedBorder: border,
-          enabledBorder: border),
-    );
     return Container(
       constraints: BoxConstraints(maxHeight: 144),
-      child: field,
+      child: _buildTextWidget(),
     );
   }
+
+  //构建当输入类型为TEXT时的文本控件
+  Widget _buildTextWidget() {
+    List<TextInputFormatter> list = [];
+    if (maxLength != null && !showMaxLengthTip) {
+      list.add(LengthLimitingTextInputFormatter(maxLength));
+    }
+    if (inputType == InputType.PHONE_NUMBER) {
+      list.add(WhitelistingTextInputFormatter.digitsOnly);
+      list.add(BlacklistingTextInputFormatter.singleLineFormatter);
+    } else if (inputType == InputType.EMAIL) {
+      String regex = r'[a-zA-Z0-9@.]+';
+      list.add(WhitelistingTextInputFormatter(RegExp(regex)));
+      list.add(BlacklistingTextInputFormatter.singleLineFormatter);
+    }
+
+    InputDecoration inputDecoration = InputDecoration(
+        contentPadding: textContentPadding,
+        hintText: hintText,
+        hintStyle: hintStyle,
+        border: border,
+        disabledBorder: border,
+        focusedBorder: border,
+        enabledBorder: border);
+
+    int maxLength2;
+    int maxLine2;
+    
+    if(maxLength!=null){
+      maxLength2=maxLength;
+    }else{
+      maxLength2=TextField.noMaxLength;
+    }
+    
+    if(inputType==InputType.PASSWORD){
+      maxLine2=1;
+    }else{
+      maxLine2=null;
+    }
+    
+    return TextField(
+        controller: _controller,
+        style: contentStyle,
+        maxLines: maxLine2,
+        maxLength:maxLength2,
+        autofocus: autoFocus,
+        textAlign: TextAlign.start,
+        textDirection: TextDirection.ltr,
+        textAlignVertical: TextAlignVertical.center,
+        onChanged: onChanged,
+        obscureText: inputType == InputType.PASSWORD ? true : false,
+        inputFormatters: list,
+        decoration: inputDecoration);
+  }
+  
+}
+
+
+class _EmailFormat extends TextInputFormatter{
+  @override
+  TextEditingValue formatEditUpdate(TextEditingValue oldValue, TextEditingValue newValue) {
+    String text=newValue.text;
+    int i=0;
+    for(;i<text.length;i++){
+      
+      
+    }
+    
+    
+    return null;
+  }
+  
+}
+
+
+//文本框的输入类型
+enum InputType {
+  TEXT,
+  EMAIL,
+  PHONE_NUMBER,
+  PASSWORD,
 }

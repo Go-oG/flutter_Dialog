@@ -56,11 +56,15 @@ class MyApp extends StatelessWidget {
     DialogUtil.show(
         context,
         InputDialog(
-            title: Text("Input Dialog"),
-            autoCancel: true,
-            hintText: "请输入文字",
-            positive: "确定",
-            negative: "取消"));
+          title: Text("Input Dialog"),
+          autoCancel: true,
+          hintText: "请输入文字",
+          positive: "确定",
+          negative: "取消",
+          showMaxLengthTip: true,
+          maxLength: null,
+          inputType: InputType.EMAIL,
+        ));
   }
 
   void _showListDialog(BuildContext context) {
