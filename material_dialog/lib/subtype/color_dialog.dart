@@ -168,7 +168,7 @@ class ColorDialog extends BaseDialog {
       _scrollController = ScrollController();
       _scrollController.addListener(() {
         int oldPageIndex = pageIndex;
-        
+
         if (_maxWidth <= 0) {
           pageIndex = 0;
         } else {
@@ -256,7 +256,7 @@ class ColorDialog extends BaseDialog {
       mainAxisSize: MainAxisSize.min,
       children: <Widget>[
         Padding(
-          padding: EdgeInsets.only(bottom: 4),
+          padding: EdgeInsets.only(bottom: 2),
           child: DotsIndicator(
             dotsCount: 2,
             position: pageIndex.toDouble(),
@@ -311,6 +311,7 @@ class ColorDialog extends BaseDialog {
       colorList = [];
     }
     return GridView.builder(
+        padding: EdgeInsets.zero,
         itemCount: colorList.length,
         shrinkWrap: true,
         gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
@@ -338,6 +339,7 @@ class ColorDialog extends BaseDialog {
       colorList = [];
     }
     return GridView.builder(
+        padding: EdgeInsets.zero,
         shrinkWrap: true,
         itemCount: colorList.length + 1,
         gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(

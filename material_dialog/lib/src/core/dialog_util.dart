@@ -13,11 +13,7 @@ class DialogUtil {
       pageBuilder: (BuildContext buildContext, Animation<double> animation,
           Animation<double> secondaryAnimation) {
         final Widget pageChild = CoreDialog(dialog);
-        return SafeArea(
-          child: Builder(builder: (BuildContext context) {
-            return pageChild;
-          }),
-        );
+        return pageChild;
       },
       barrierDismissible: dialog.outCanCancel,
       barrierLabel: "",

@@ -74,7 +74,7 @@ class _DialogState extends State<CoreDialog> {
     } else if (widget.dialog.gravity == Gravity.bottom) {
       align = Alignment.bottomCenter;
     }
-
+    
     return WillPopScope(
       onWillPop: () async {
         return widget.dialog.breakCancel;
@@ -87,10 +87,9 @@ class _DialogState extends State<CoreDialog> {
                 maxHeight: _maxDialogHeight,
                 maxWidth: _maxDialogWidth,
                 minWidth: _maxDialogWidth),
-            //这里嵌套一个Card是因为某些子组件要求上级部件必须包含有Material 组件
-            child: Card(
-              //将其全部内外间距都取消
-              margin: EdgeInsets.zero,
+            //这里嵌套一个Material是因为某些子组件要求上级部件必须包含有Material 组件
+            child: Material(
+              type: MaterialType.card,
               color: widget.dialog.backgroundColor,
               shape: RoundedRectangleBorder(
                   borderRadius: widget.dialog.cornerRadius),
@@ -104,6 +103,7 @@ class _DialogState extends State<CoreDialog> {
             )),
       ),
     );
+    
   }
 
   //构建控件列表
