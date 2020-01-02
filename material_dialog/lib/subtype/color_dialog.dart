@@ -1,3 +1,4 @@
+import 'package:dots_indicator/dots_indicator.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
@@ -6,8 +7,8 @@ import 'package:material_dialog/src/colors.dart';
 
 class _CustomFormatter extends TextInputFormatter {
   @override
-  TextEditingValue formatEditUpdate(TextEditingValue oldValue,
-      TextEditingValue newValue) {
+  TextEditingValue formatEditUpdate(
+      TextEditingValue oldValue, TextEditingValue newValue) {
     return newValue.copyWith(
         text: newValue.text.toUpperCase(),
         selection: newValue.selection,
@@ -37,55 +38,56 @@ class ColorDialog extends BaseDialog {
   List<Color> colors;
   List<List<Color>> childColors;
 
-  ColorDialog({this.initialSelection,
-    this.columnCount = 4,
-    this.childItemMargin = 16,
-    this.allowCustomArgb = false,
-    this.showAlphaSelector = false,
-    this.outCircleWidth = 1.5,
-    List<Color> colors,
-    List<List<Color>> childColors,
-    Text title,
-    Widget titleIcon,
-    Text checkBoxPrompt,
-    bool promptInitValue = false,
-    String positive,
-    String negative,
-    Gravity gravity,
-    bool reverseActionButton,
-    Color positiveColor,
-    Color negativeColor,
-    Color backgroundColor,
-    Color maskColor,
-    RouteTransitionsBuilder animation,
-    Duration transitionDuration,
-    BorderRadiusGeometry cornerRadius,
-    bool autoCancel = true,
-    bool breakCancel = true,
-    bool outCanCancel = true,
-    ActionListener actionListener,
-    ValueChanged<bool> checkBoxPromptCallback})
+  ColorDialog(
+      {this.initialSelection,
+      this.columnCount = 4,
+      this.childItemMargin = 16,
+      this.allowCustomArgb = false,
+      this.showAlphaSelector = false,
+      this.outCircleWidth = 1.5,
+      List<Color> colors,
+      List<List<Color>> childColors,
+      Text title,
+      Widget titleIcon,
+      Text checkBoxPrompt,
+      bool promptInitValue = false,
+      String positive,
+      String negative,
+      Gravity gravity,
+      bool reverseActionButton,
+      Color positiveColor,
+      Color negativeColor,
+      Color backgroundColor,
+      Color maskColor,
+      RouteTransitionsBuilder animation,
+      Duration transitionDuration,
+      BorderRadiusGeometry cornerRadius,
+      bool autoCancel = true,
+      bool breakCancel = true,
+      bool outCanCancel = true,
+      ActionListener actionListener,
+      ValueChanged<bool> checkBoxPromptCallback})
       : super(
-      title: title,
-      titleIcon: titleIcon,
-      checkBoxPrompt: checkBoxPrompt,
-      positive: positive,
-      negative: negative,
-      gravity: gravity,
-      reverseActionButton: reverseActionButton,
-      animation: animation,
-      actionListener: actionListener,
-      checkBoxPromptCallback: checkBoxPromptCallback,
-      cornerRadius: cornerRadius,
-      promptInitValue: promptInitValue,
-      positiveColor: positiveColor,
-      negativeColor: negativeColor,
-      backgroundColor: backgroundColor,
-      maskColor: maskColor,
-      transitionDuration: transitionDuration,
-      autoCancel: autoCancel,
-      breakCancel: breakCancel,
-      outCanCancel: outCanCancel) {
+            title: title,
+            titleIcon: titleIcon,
+            checkBoxPrompt: checkBoxPrompt,
+            positive: positive,
+            negative: negative,
+            gravity: gravity,
+            reverseActionButton: reverseActionButton,
+            animation: animation,
+            actionListener: actionListener,
+            checkBoxPromptCallback: checkBoxPromptCallback,
+            cornerRadius: cornerRadius,
+            promptInitValue: promptInitValue,
+            positiveColor: positiveColor,
+            negativeColor: negativeColor,
+            backgroundColor: backgroundColor,
+            maskColor: maskColor,
+            transitionDuration: transitionDuration,
+            autoCancel: autoCancel,
+            breakCancel: breakCancel,
+            outCanCancel: outCanCancel) {
     if (this.columnCount == null || this.columnCount <= 0) {
       throw ArgumentError("参数 columnCount must not null And must > 0");
     }
@@ -149,15 +151,24 @@ class ColorDialog extends BaseDialog {
   @override
   void initState() {
     super.initState();
+    if (allowCustomArgb != null) {
+      this.pageIndex = 0;
+    }
     if (customArgbColor == null) {
       customArgbColor = Colors.black;
     }
     if (_controller == null) {
       _controller = TextEditingController(text: _formatColorToString());
     }
+    if (_textFieldNode == null) {
+      _textFieldNode = FocusNode();
+    }
+
     if (_scrollController == null) {
       _scrollController = ScrollController();
       _scrollController.addListener(() {
+        int oldPageIndex = pageIndex;
+        
         if (_maxWidth <= 0) {
           pageIndex = 0;
         } else {
@@ -167,10 +178,10 @@ class ColorDialog extends BaseDialog {
             pageIndex = 0;
           }
         }
+        if (oldPageIndex != pageIndex) {
+          setState();
+        }
       });
-    }
-    if (_textFieldNode == null) {
-      _textFieldNode = FocusNode();
     }
   }
 
@@ -193,10 +204,10 @@ class ColorDialog extends BaseDialog {
   ///否则其它情况下会返回主界面选择的颜色
   @override
   dynamic operationResult(bool isPositiveButton) {
-    if(!isPositiveButton){
+    if (!isPositiveButton) {
       return null;
     }
-    
+
     if (allowCustomArgb && pageIndex == 1) {
       if (showAlphaSelector) {
         return Color.fromARGB(customArgbColor.alpha, customArgbColor.red,
@@ -237,28 +248,46 @@ class ColorDialog extends BaseDialog {
     }
     _maxWidth = obtainContentMaxWidth(context);
     _iconSize = ((_maxWidth - (columnCount - 1) * childItemMargin) /
-        (columnCount * 1.0)) *
+            (columnCount * 1.0)) *
         0.8;
-    return SingleChildScrollView(
-      scrollDirection: Axis.horizontal,
-      physics: PageScrollPhysics(),
-      controller: _scrollController,
-      child: Wrap(
-        alignment: WrapAlignment.start,
-        children: <Widget>[
-          SizedBox(
-            width: _maxWidth,
-            child: _buildMainPage(),
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.center,
+      mainAxisAlignment: MainAxisAlignment.start,
+      mainAxisSize: MainAxisSize.min,
+      children: <Widget>[
+        Padding(
+          padding: EdgeInsets.only(bottom: 4),
+          child: DotsIndicator(
+            dotsCount: 2,
+            position: pageIndex.toDouble(),
+            decorator: DotsDecorator(
+                color: Colors.black26, activeColor: Colors.black87),
           ),
-          Padding(
-            padding: EdgeInsets.only(left: 1),
-            child: SizedBox(
-              width: _maxWidth,
-              child: _buildArgbPage(),
+        ),
+        Flexible(
+          child: SingleChildScrollView(
+            scrollDirection: Axis.horizontal,
+            physics: PageScrollPhysics(),
+            controller: _scrollController,
+            child: Wrap(
+              alignment: WrapAlignment.start,
+              children: <Widget>[
+                SizedBox(
+                  width: _maxWidth,
+                  child: _buildMainPage(),
+                ),
+                Padding(
+                  padding: EdgeInsets.only(left: 1),
+                  child: SizedBox(
+                    width: _maxWidth,
+                    child: _buildArgbPage(),
+                  ),
+                ),
+              ],
             ),
           ),
-        ],
-      ),
+        )
+      ],
     );
   }
 
@@ -319,7 +348,7 @@ class ColorDialog extends BaseDialog {
         itemBuilder: (ctx, index) {
           if (index == 0) {
             Icon icon =
-            Icon(Icons.arrow_back, color: Colors.black54, size: _iconSize);
+                Icon(Icons.arrow_back, color: Colors.black54, size: _iconSize);
             return CustomColorWidget(() {
               subSelectIndex = -1;
               _showStackIndex = 0;
@@ -405,7 +434,7 @@ class ColorDialog extends BaseDialog {
                       contentPadding: EdgeInsets.only(bottom: 8),
                       hintText: "十六进制颜色值",
                       hintStyle:
-                      TextStyle(fontSize: 13, color: Colors.grey[300]),
+                          TextStyle(fontSize: 13, color: Colors.grey[300]),
                       border: inputBorder,
                       enabledBorder: inputBorder,
                       errorBorder: inputBorder,
@@ -498,12 +527,9 @@ class ColorDialog extends BaseDialog {
   }
 
   void _dismissFocus() {
-    //先关闭软键盘
-//    FocusScope.of(context).requestFocus(FocusNode());
     _textFieldNode.unfocus();
   }
 
- 
   //处理当文本改变时，应该显示的颜色是什么
   void _handleColorWhenTextChange(String s) {
     if (s == null || s.isEmpty) {
