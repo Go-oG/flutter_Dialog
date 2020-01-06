@@ -42,51 +42,62 @@ class MyApp extends StatelessWidget {
   }
 
   void _showSimpleDialog(BuildContext context) {
-    DialogUtil.show(
-        context,
-        cs.SimpleDialog(
-            title: Text("Simple Dialog"),
-            content: "This is Simple Dialog" * 5,
-            autoCancel: true,
-            positive: "确定",
-            negative: "取消"));
+    cs.SimpleDialog dialog = cs.SimpleDialog(
+        title: Text("Simple Dialog",
+            style: TextStyle(fontSize: 17, color: Colors.black87)),
+        titleIcon: Icon(
+          Icons.send,
+          color: Colors.black87,
+        ),
+        contentStyle: TextStyle(fontSize: 15, color: Colors.black54),
+        content: "This is Simple Dialog" * 5,
+        autoCancel: true,
+        positive: "确定",
+        negative: "取消");
+
+    DialogUtil.show(context, dialog);
   }
 
   void _showInputDialog(BuildContext context) {
-    DialogUtil.show(
-        context,
-        InputDialog(
-          title: Text("Input Dialog"),
-          autoCancel: true,
-          hintText: "请输入文字",
-          positive: "确定",
-          negative: "取消",
-          showMaxLengthTip: true,
-          maxLength: null,
-          inputType: InputType.EMAIL,
-        ));
+    InputDialog dialog = InputDialog(
+      title: Text("Input Dialog"),
+      autoCancel: true,
+      hintText: "请输入文字",
+      positive: "确定",
+      negative: "取消",
+      showMaxLengthTip: true,
+      maxLength: null,
+      inputType: InputType.EMAIL,
+    );
+
+    DialogUtil.show(context, dialog);
   }
 
   void _showListDialog(BuildContext context) {
-    DialogUtil.show(
-        context,
-        ListDialog(20, (val) {
-          return "Item $val";
-        }, singleSelect: true, isRadioButton: true));
+    ListDialog dialog = ListDialog(20, (val) {
+      return "Item $val";
+    },
+        singleSelect: true,
+        isRadioButton: true,
+        title: Text(
+          "List Dialog",
+          style: TextStyle(color: Colors.black87, fontSize: 17),
+        ));
+
+    DialogUtil.show(context, dialog);
   }
 
   void _showColorDialog(BuildContext context) async {
-    var result = await DialogUtil.show(
-        context,
-        ColorDialog(
-            title: Text("Color Dialog"),
-            positive: "确定",
-            negative: "取消",
-            cornerRadius: BorderRadius.only(
-                topLeft: Radius.circular(16), topRight: Radius.circular(16)),
-            showAlphaSelector: true,
-            initialSelection: Colors.blue[500],
-            allowCustomArgb: true));
+    ColorDialog dialog = ColorDialog(
+        title: Text("Color Dialog"),
+        positive: "确定",
+        negative: "取消",
+        cornerRadius: BorderRadius.all(Radius.circular(16)),
+        showAlphaSelector: true,
+        initialSelection: Colors.blue[500],
+        allowCustomArgb: true);
+
+    var result = await DialogUtil.show(context, dialog);
     if (result == null) {
       print("没选择任何颜色");
     }

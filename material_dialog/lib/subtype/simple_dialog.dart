@@ -7,8 +7,7 @@ class SimpleDialog extends BaseDialog {
 
   SimpleDialog(
       {this.content,
-      this.contentStyle =
-          const TextStyle(color: Color(0xFFBDBDBD), fontSize: 17),
+      this.contentStyle = const TextStyle(color: Color(0xFFBDBDBD), fontSize: 17),
       Text title,
       Widget titleIcon,
       Text checkBoxPrompt,
