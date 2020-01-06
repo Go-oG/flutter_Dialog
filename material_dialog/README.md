@@ -1,7 +1,7 @@
 
 # Material_Dialog
 
-#About
+# About
 Material_dialog 是为了在Flutter中简化Dialog使用而被创建的，该项目参考了GitHub上的[material-dialogs](https://github.com/afollestad/material-dialogs)，目前本项目实现了SimpleDialog、InputDialog、ColorDialog、ListDialog；其它的Dialog在后续会考虑进行实现的
 
 ## instanll
@@ -16,7 +16,7 @@ dependencies:
 更多关于[API](#jump)的说明请见[这里](#jump)。
 
 
-###SimpleDialog
+### SimpleDialog
 
 ```
  cs.SimpleDialog dialog = cs.SimpleDialog(
@@ -121,7 +121,7 @@ the cs is library Alias;the real Value is: package:material_dialog/subtype/simpl
 |  content | String  | 内容  |
 |  contentStyle | TextStyle  | 内容样式  |
 
-##InputDialog
+## InputDialog
 
 | Parameter  | Type  | Mean  |
 | ------------ | ------------ | ------------ |
@@ -137,7 +137,7 @@ the cs is library Alias;the real Value is: package:material_dialog/subtype/simpl
 |  textContentPadding | EdgeInsetsGeometry  | 内容间距|
 |  onChanged | ValueChanged<String>  | 内容改变回调|
 
-##ListDialog
+## ListDialog
 
 | Parameter  | Type  | Mean  |
 | ------------ | ------------ | ------------ |
@@ -150,7 +150,7 @@ the cs is library Alias;the real Value is: package:material_dialog/subtype/simpl
 |  isRadioButton | bool   | 是否为RadiuButton |
 |  singleSelect | bool   | 单选还是多选 |
 
-##ColorDialog
+## ColorDialog
 
 | Parameter  | Type  | Mean  |
 | ------------ | ------------ | ------------ |
