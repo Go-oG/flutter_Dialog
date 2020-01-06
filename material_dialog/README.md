@@ -9,7 +9,7 @@ In your flutter project add the dependency:
 ```
 dependencies:
   ...
-  sqflite: ^1.2.0
+
 ```
 
 ## How To Use MaterialDialog

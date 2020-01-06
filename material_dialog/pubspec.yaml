@@ -2,6 +2,7 @@ name: material_dialog
 description: MaterialDialog.
 version: 0.0.1
 author: Go_oG
+homepage: https://github.com/Go-oG/flutter_Dialog/blob/master/material_dialog/README.md#simpledialog-1
 
 environment:
   sdk: ">=2.1.0 <3.0.0"
