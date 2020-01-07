@@ -17,7 +17,7 @@ dependencies:
 更多关于[API](#jump)的说明请见[这里](#jump)。
 
 ### SimpleDialog
-<img src="https://raw.githubusercontent.com/Go-oG/flutter_Dialog/master/static/simple_dialog.jpg" style="zoom:30%" />
+<img src="https://raw.githubusercontent.com/Go-oG/flutter_Dialog/master/static/simple_dialog.jpg" style="zoom:20%" />
 
 ```
     cs.SimpleDialog dialog = cs.SimpleDialog(
@@ -50,7 +50,9 @@ dependencies:
 the cs is library Alias;the real Value is: package:material_dialog/subtype/simple_dialog.dart
 
 ### InputDialog
+
 <img src="https://raw.githubusercontent.com/Go-oG/flutter_Dialog/master/static/input_dialog.jpg" style="zoom:20%" />
+
 ```
      InputDialog dialog = InputDialog(
       title: Text("Input Dialog", style: TextStyle(color: Colors.black87, fontSize: 19)),
@@ -105,6 +107,7 @@ the cs is library Alias;the real Value is: package:material_dialog/subtype/simpl
     Color color = result as Color;
 ```
 <spand id="jump"></spand>
+
 ### API Introduction
 该项目主要包含两个核心类 _CoreDialog 和 BaseDialog;
 其中_CoreDialog is a Real StatefulWidget,but BaseDialog is Virtual StatelessWidget ,it`s simulated StatefulWidget，so you can use it like use StatefulWidget;SimpleDialog、InputDialog、ListDialog、ColorDialog都是继承于BaseDialog并拥有其全部属性，so,如果你想实现其它Dialog,你可以继承于BaseDialog。
