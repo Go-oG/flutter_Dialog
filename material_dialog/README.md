@@ -5,6 +5,7 @@
 Material_dialog 是为了在Flutter中简化Dialog使用而被创建的，该项目参考了GitHub上的[material-dialogs](https://github.com/afollestad/material-dialogs)，目前本项目实现了SimpleDialog、InputDialog、ColorDialog、ListDialog；其它的Dialog在后续会考虑进行实现的
 
 ## install
+
 In your flutter project add the dependency:
 ```
 dependencies:
@@ -16,8 +17,7 @@ dependencies:
 更多关于[API](#jump)的说明请见[这里](#jump)。
 
 ### SimpleDialog
-
-
+<img src="https://raw.githubusercontent.com/Go-oG/flutter_Dialog/master/static/simple_dialog.jpg" style="zoom:30%" />
 
 ```
     cs.SimpleDialog dialog = cs.SimpleDialog(
@@ -50,6 +50,7 @@ dependencies:
 the cs is library Alias;the real Value is: package:material_dialog/subtype/simple_dialog.dart
 
 ### InputDialog
+<img src="https://raw.githubusercontent.com/Go-oG/flutter_Dialog/master/static/input_dialog.jpg" style="zoom:20%" />
 ```
      InputDialog dialog = InputDialog(
       title: Text("Input Dialog", style: TextStyle(color: Colors.black87, fontSize: 19)),
@@ -66,6 +67,8 @@ the cs is library Alias;the real Value is: package:material_dialog/subtype/simpl
 ```
 
 ### ListDialog
+<img src="https://raw.githubusercontent.com/Go-oG/flutter_Dialog/master/static/list_dialog1.jpg" style="zoom:20%" />  <img src="https://raw.githubusercontent.com/Go-oG/flutter_Dialog/master/static/list_dialog2.jpg" style="zoom:20%" />
+
 ```
     ListDialog dialog = ListDialog(15, (val) {
       return "Item $val";
@@ -83,7 +86,7 @@ the cs is library Alias;the real Value is: package:material_dialog/subtype/simpl
 ```
 
 ### ColorList
-
+<img src="https://raw.githubusercontent.com/Go-oG/flutter_Dialog/master/static/color_dialog1.jpg" style="zoom:20%" />  <img src="https://raw.githubusercontent.com/Go-oG/flutter_Dialog/master/static/color_dialog2.jpg" style="zoom:20%" />
 ```
  ColorDialog dialog = ColorDialog(
         title: Text("Color Dialog"),
