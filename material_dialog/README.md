@@ -4,7 +4,7 @@
 # About
 Material_dialog 是为了在Flutter中简化Dialog使用而被创建的，该项目参考了GitHub上的[material-dialogs](https://github.com/afollestad/material-dialogs)，目前本项目实现了SimpleDialog、InputDialog、ColorDialog、ListDialog；其它的Dialog在后续会考虑进行实现的
 
-## instanll
+## install
 In your flutter project add the dependency:
 ```
 dependencies:
@@ -15,53 +15,70 @@ dependencies:
 ## How To Use MaterialDialog
 更多关于[API](#jump)的说明请见[这里](#jump)。
 
-
 ### SimpleDialog
 
-```
- cs.SimpleDialog dialog = cs.SimpleDialog(
-        title: Text("Simple Dialog",
-            style: TextStyle(fontSize: 17, color: Colors.black87)),
-        titleIcon: Icon(
-          Icons.send,
-          color: Colors.black87,
-        ),
-        contentStyle: TextStyle(fontSize: 15,color: Colors.black54),
-        content: "This is Simple Dialog" * 5,
-        autoCancel: true,
-        positive: "确定",
-        negative: "取消");
 
-    DialogUtil.show(context, dialog);
+
+```
+    cs.SimpleDialog dialog = cs.SimpleDialog(
+         title: Text("Simple Dialog",
+             style: TextStyle(fontSize: 19, color: Colors.black87)),
+         titleIcon: Icon(
+           Icons.send,
+           color: Colors.black87,
+         ),
+         contentStyle: TextStyle(fontSize: 17, color: Colors.black54),
+         content: "This is Simple Dialog" * 5,
+         cornerRadius: BorderRadius.circular(16),
+         checkBoxPrompt: Text(
+           "This is CheckBoxPrompt text",
+           style: TextStyle(color: Colors.black54, fontSize: 13),
+         ),
+         promptInitValue: true,
+         autoCancel: true,
+         outCanCancel: false,
+         breakCancel: false,
+         gravity: Gravity.center,
+         backgroundColor: Colors.white,
+         maskColor: Colors.black38,
+         positive: "done",
+         negative: "cancel",
+         positiveColor: Colors.blue,
+         negativeColor: Colors.red);
+     DialogUtil.show(context, dialog);
 ```
 the cs is library Alias;the real Value is: package:material_dialog/subtype/simple_dialog.dart
 
 ### InputDialog
 ```
- InputDialog dialog = InputDialog(
-      title: Text("Input Dialog"),
+     InputDialog dialog = InputDialog(
+      title: Text("Input Dialog", style: TextStyle(color: Colors.black87, fontSize: 19)),
       autoCancel: true,
-      hintText: "请输入文字",
-      positive: "确定",
-      negative: "取消",
-      showMaxLengthTip: true,
+      hintText: "please input content",
+      contentStyle: TextStyle(fontSize: 17,color: Colors.black54),
+      positive: "done",
+      negative: "cancel",
+      showMaxLengthTip: false,
       maxLength: null,
-      inputType: InputType.EMAIL,
+      inputType: InputType.TEXT,
     );
     DialogUtil.show(context, dialog);
 ```
 
 ### ListDialog
 ```
-  ListDialog dialog = ListDialog(20, (val) {
+    ListDialog dialog = ListDialog(15, (val) {
       return "Item $val";
     },
         singleSelect: true,
-        isRadioButton: true,
+        isRadioButton: false,
         title: Text(
           "List Dialog",
-          style: TextStyle(color: Colors.black87, fontSize: 17),
-        ));
+          style: TextStyle(color: Colors.black87, fontSize: 19),
+        ),
+        positive: "done",
+        negative: "cancel",
+        autoCancel: true);
     DialogUtil.show(context, dialog);
 ```
 
@@ -70,8 +87,8 @@ the cs is library Alias;the real Value is: package:material_dialog/subtype/simpl
 ```
  ColorDialog dialog = ColorDialog(
         title: Text("Color Dialog"),
-        positive: "确定",
-        negative: "取消",
+        positive: "done",
+        negative: "cancel",
         cornerRadius: BorderRadius.only(
             topLeft: Radius.circular(16), topRight: Radius.circular(16)),
         showAlphaSelector: true,
@@ -84,9 +101,8 @@ the cs is library Alias;the real Value is: package:material_dialog/subtype/simpl
     }
     Color color = result as Color;
 ```
-
- <spand id="jump",style="font-size:19px">API Introduction</spand>
-
+<spand id="jump"></spand>
+### API Introduction
 该项目主要包含两个核心类 _CoreDialog 和 BaseDialog;
 其中_CoreDialog is a Real StatefulWidget,but BaseDialog is Virtual StatelessWidget ,it`s simulated StatefulWidget，so you can use it like use StatefulWidget;SimpleDialog、InputDialog、ListDialog、ColorDialog都是继承于BaseDialog并拥有其全部属性，so,如果你想实现其它Dialog,你可以继承于BaseDialog。
 下面是BaseDialog的属性及其含义

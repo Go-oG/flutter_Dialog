@@ -7,7 +7,8 @@ class SimpleDialog extends BaseDialog {
 
   SimpleDialog(
       {this.content,
-      this.contentStyle = const TextStyle(color: Color(0xFFBDBDBD), fontSize: 17),
+      this.contentStyle =
+          const TextStyle(color: Color(0xFFBDBDBD), fontSize: 17),
       Text title,
       Widget titleIcon,
       Text checkBoxPrompt,
@@ -34,7 +35,7 @@ class SimpleDialog extends BaseDialog {
             checkBoxPrompt: checkBoxPrompt,
             positive: positive,
             negative: negative,
-            gravity:gravity,
+            gravity: gravity,
             reverseActionButton: reverseActionButton,
             animation: animation,
             actionListener: actionListener,
@@ -59,5 +60,27 @@ class SimpleDialog extends BaseDialog {
           style: contentStyle);
     }
     return null;
+  }
+
+  SimpleDialog.of(this.content,
+      {String title,
+      String positive,
+      String negative,
+      ActionListener actionListener}) {
+    SimpleDialog(
+        title:
+            Text(title, style: TextStyle(color: Colors.black87, fontSize: 19)),
+        content: content,
+        contentStyle: TextStyle(color: Colors.black54, fontSize: 17),
+        gravity: Gravity.center,
+        backgroundColor: Colors.white,
+        maskColor: Colors.black38,
+        cornerRadius: BorderRadius.circular(16),
+        autoCancel: true,
+        outCanCancel: true,
+        breakCancel: true,
+        positive: positive,
+        negative: negative,
+        actionListener: actionListener);
   }
 }

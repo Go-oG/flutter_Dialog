@@ -11,14 +11,15 @@ const double _dialogMaxWidth = 320;
 //整个Dialog内容的左右边距
 const double leftMargin = 24;
 const double rightMargin = 24;
+const double checkboxPromptMargin = 16;
 const double titleTopMargin = 20; //title距顶部的间距
 const double titleWithContentMargin = 20; //title和Content之间的间隔
 const double listItemContentMargin = 32; //在ListDialog中 item中 checkBox和Text的间隔
 const double contentWithActionButtonMargin = 20; //中间内容和ActionButton的间隔
-const double contentWithCheckBoxMargin = 8; //中间内容和CheckBox的间隔
+const double contentWithCheckBoxMargin = 20; //中间内容和CheckBox的间隔
 const double titleTextSize = 20; //title 字体大小
 const double contentTextSize = 16; //中心内容 文字的大小
-const double actionButtonTextSize = 14; //ActionButton 文字大小
+const double actionButtonTextSize = 16; //ActionButton 文字大小
 const double actionButtonHeight = 36; //ActionButton按钮的高度
 const double actionButtonHMargin = 8; //ActionButton之间水平间隔
 const double actionButtonVMargin = 12; //ActionButton之间的竖直间隔
@@ -164,7 +165,7 @@ abstract class BaseDialog extends LiveCycleCallback {
   double obtainDialogMaxHeight(BuildContext context) {
     MediaQueryData data = MediaQuery.of(context);
     Size size = data.size;
-    return (size.height - data.padding.top)*0.8;
+    return (size.height - data.padding.top) * 0.8;
   }
 
   ///返回dialog的最大宽度 该方法决定了Dialog整体的宽度
@@ -194,7 +195,7 @@ abstract class BaseDialog extends LiveCycleCallback {
   }
 
   //隐藏软键盘
-  void dismissKeyboard(){
+  void dismissKeyboard() {
     FocusScope.of(context).requestFocus(FocusNode());
   }
 }

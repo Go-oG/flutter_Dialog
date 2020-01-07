@@ -143,7 +143,7 @@ class _DialogState extends State<CoreDialog> {
     if (checkBoxPromptWidget != null) {
       list.add(Padding(
           padding: EdgeInsets.only(
-              left: leftMargin,
+              left: checkboxPromptMargin,
               right: rightMargin,
               top: contentWithCheckBoxMargin),
           child: checkBoxPromptWidget));
@@ -337,7 +337,7 @@ class _DialogState extends State<CoreDialog> {
       color: Colors.transparent,
       text: Text(
         widget.dialog.negative,
-        style: TextStyle(fontSize: actionButtonTextSize),
+        style: TextStyle(fontSize: actionButtonTextSize,color: widget.dialog.negativeColor),
       ),
       onPressed: () {
         if (widget.dialog.actionListener != null) {

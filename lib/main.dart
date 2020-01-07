@@ -44,54 +44,70 @@ class MyApp extends StatelessWidget {
   void _showSimpleDialog(BuildContext context) {
     cs.SimpleDialog dialog = cs.SimpleDialog(
         title: Text("Simple Dialog",
-            style: TextStyle(fontSize: 17, color: Colors.black87)),
+            style: TextStyle(fontSize: 19, color: Colors.black87)),
         titleIcon: Icon(
           Icons.send,
           color: Colors.black87,
         ),
-        contentStyle: TextStyle(fontSize: 15, color: Colors.black54),
+        contentStyle: TextStyle(fontSize: 17, color: Colors.black54),
         content: "This is Simple Dialog" * 5,
+        cornerRadius: BorderRadius.circular(16),
+        checkBoxPrompt: Text(
+          "This is CheckBoxPrompt text",
+          style: TextStyle(color: Colors.black54, fontSize: 13),
+        ),
+        promptInitValue: true,
         autoCancel: true,
-        positive: "确定",
-        negative: "取消");
-
+        outCanCancel: false,
+        breakCancel: false,
+        gravity: Gravity.center,
+        backgroundColor: Colors.white,
+        maskColor: Colors.black38,
+        positive: "done",
+        negative: "cacel",
+        positiveColor: Colors.blue,
+        negativeColor: Colors.red);
     DialogUtil.show(context, dialog);
   }
 
   void _showInputDialog(BuildContext context) {
     InputDialog dialog = InputDialog(
-      title: Text("Input Dialog"),
+      title: Text("Input Dialog",
+          style: TextStyle(color: Colors.black87, fontSize: 19)),
       autoCancel: true,
-      hintText: "请输入文字",
-      positive: "确定",
-      negative: "取消",
-      showMaxLengthTip: true,
+      hintText: "please input content",
+      contentStyle: TextStyle(fontSize: 17, color: Colors.black54),
+      positive: "done",
+      negative: "cancel",
+      showMaxLengthTip: false,
       maxLength: null,
-      inputType: InputType.EMAIL,
+      inputType: InputType.TEXT,
     );
 
     DialogUtil.show(context, dialog);
   }
 
   void _showListDialog(BuildContext context) {
-    ListDialog dialog = ListDialog(20, (val) {
+    ListDialog dialog = ListDialog(4, (val) {
       return "Item $val";
     },
         singleSelect: true,
-        isRadioButton: true,
+        isRadioButton: false,
         title: Text(
           "List Dialog",
-          style: TextStyle(color: Colors.black87, fontSize: 17),
-        ));
-
+          style: TextStyle(color: Colors.black87, fontSize: 19),
+        ),
+        positive: "done",
+        negative: "cancel",
+        autoCancel: true);
     DialogUtil.show(context, dialog);
   }
 
   void _showColorDialog(BuildContext context) async {
     ColorDialog dialog = ColorDialog(
-        title: Text("Color Dialog"),
-        positive: "确定",
-        negative: "取消",
+        title: Text("Color Dialog",style: TextStyle(color: Colors.black87,fontSize: 19),),
+        positive: "done",
+        negative: "cancel",
         cornerRadius: BorderRadius.all(Radius.circular(16)),
         showAlphaSelector: true,
         initialSelection: Colors.blue[500],

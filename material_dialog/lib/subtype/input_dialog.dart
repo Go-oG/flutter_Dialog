@@ -108,8 +108,7 @@ class InputDialog extends BaseDialog {
       child: _buildTextWidget(),
     );
   }
-
-  //构建当输入类型为TEXT时的文本控件
+  
   Widget _buildTextWidget() {
     List<TextInputFormatter> list = [];
     if (maxLength != null && !showMaxLengthTip) {
@@ -139,7 +138,9 @@ class InputDialog extends BaseDialog {
     if(maxLength!=null){
       maxLength2=maxLength;
     }else{
-      maxLength2=TextField.noMaxLength;
+      if(showMaxLengthTip){
+        maxLength2=TextField.noMaxLength;
+      }
     }
     
     if(inputType==InputType.PASSWORD){
@@ -164,24 +165,6 @@ class InputDialog extends BaseDialog {
   }
   
 }
-
-
-class _EmailFormat extends TextInputFormatter{
-  @override
-  TextEditingValue formatEditUpdate(TextEditingValue oldValue, TextEditingValue newValue) {
-    String text=newValue.text;
-    int i=0;
-    for(;i<text.length;i++){
-      
-      
-    }
-    
-    
-    return null;
-  }
-  
-}
-
 
 //文本框的输入类型
 enum InputType {

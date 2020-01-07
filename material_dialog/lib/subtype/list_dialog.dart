@@ -6,7 +6,6 @@ typedef ItemBuilder = String Function(int index);
 class _ListItemBean {
   final String itemTitle;
   bool isCheck;
-
   _ListItemBean(this.itemTitle, {this.isCheck = false});
 }
 
