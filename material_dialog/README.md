@@ -17,7 +17,7 @@ dependencies:
 更多关于[API](#jump)的说明请见[这里](#jump)。
 
 ### SimpleDialog
-<img src="https://raw.githubusercontent.com/Go-oG/flutter_Dialog/master/static/simple_dialog.jpg" style="zoom:20%" />
+![SimpleDialog](https://raw.githubusercontent.com/Go-oG/flutter_Dialog/master/static/simple_dialog.jpg)
 
 ```
     cs.SimpleDialog dialog = cs.SimpleDialog(
@@ -50,8 +50,7 @@ dependencies:
 the cs is library Alias;the real Value is: package:material_dialog/subtype/simple_dialog.dart
 
 ### InputDialog
-
-<img src="https://raw.githubusercontent.com/Go-oG/flutter_Dialog/master/static/input_dialog.jpg" style="zoom:20%" />
+![SimpleDialog](https://raw.githubusercontent.com/Go-oG/flutter_Dialog/master/static/input_dialog.jpg)
 
 ```
      InputDialog dialog = InputDialog(
@@ -69,7 +68,7 @@ the cs is library Alias;the real Value is: package:material_dialog/subtype/simpl
 ```
 
 ### ListDialog
-<img src="https://raw.githubusercontent.com/Go-oG/flutter_Dialog/master/static/list_dialog1.jpg" style="zoom:20%" />  <img src="https://raw.githubusercontent.com/Go-oG/flutter_Dialog/master/static/list_dialog2.jpg" style="zoom:20%" />
+![SimpleDialog](https://raw.githubusercontent.com/Go-oG/flutter_Dialog/master/static/list_dialog1.jpg) ![SimpleDialog](https://raw.githubusercontent.com/Go-oG/flutter_Dialog/master/static/list_dialog2.jpg)
 
 ```
     ListDialog dialog = ListDialog(15, (val) {
@@ -88,7 +87,8 @@ the cs is library Alias;the real Value is: package:material_dialog/subtype/simpl
 ```
 
 ### ColorList
-<img src="https://raw.githubusercontent.com/Go-oG/flutter_Dialog/master/static/color_dialog1.jpg" style="zoom:20%" />  <img src="https://raw.githubusercontent.com/Go-oG/flutter_Dialog/master/static/color_dialog2.jpg" style="zoom:20%" />
+![SimpleDialog](https://raw.githubusercontent.com/Go-oG/flutter_Dialog/master/static/color_dialog1.jpg) ![SimpleDialog](https://raw.githubusercontent.com/Go-oG/flutter_Dialog/master/static/color_dialog2.jpg)
+
 ```
  ColorDialog dialog = ColorDialog(
         title: Text("Color Dialog"),
